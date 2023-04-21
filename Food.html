@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css?family=Rubik Puddles:wght@300;500;700&display=swap" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css?family=Zilla Slab:wght@300;500;700&display=swap" rel='stylesheet'>
+        <link href="https://cdn.jsdelivr.net/npm/remixicon@2.5.0/fonts/remixicon.css" rel="stylesheet">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.4/jquery.min.js"></script>
+        <script type="text/javascript" src="xml2json.js"></script>
+        <link rel="stylesheet" href="https://unpkg.com/boxicons@latest/css/boxicons.min.css">
+        <title>Food</title>
+        <script src="./xml2json.js"></script>
+        <script>
+            function getConferenceResponses() {
+                let query = document.querySelector("#q").value; // Get query from a textbox
+                console.log(query);
+                let rooturl = "https://cdn.animenewsnetwork.com/encyclopedia/api.xml?title=~" + query; //Request URL
+                fetch(rooturl)
+                    .then(res => res.text()) // Get JSON from the response
+                    // .then(str => new window.DOMParser().parseFromString(str, "text/xml"))
+                    .then((data) => {
+                        //console.log(data)
+                        let objson = xml2json.fromStr(data);
+                        console.log(objson);
+                        for(let i = 0; i < objson.ann.anime.length; i++){
+                            let title = objson.ann.anime[i]['@attributes'].name;
+                            let precision = objson.ann.anime[i]['@attributes'].precision;
+
+                            document.querySelector("#output").innerHTML += "<p>Name : " + title +"</p>"+"<p>Precision :" + precision +"</p><br>";
+                        }
+                    })
+                    .catch((err) => console.log(err));
+            }
+        </script>
+        <style>
+            * {
+                font-family: 'Zilla Slab'
+            }
+
+            body {
+                padding: 30px;
+                background-color: rgb(199, 244, 247);
+            }
+
+        </style>
+    </head>
+    <body>
+        <h2>S e a r c h  . . .</h2>
+        <input type="text" placeholder="food" id="q">
+
+        <button onclick="getConferenceResponses()"><i class="ri-search-line"></i></button>
+
+        <p>Food List</p>
+        <div id="output"></div>
+    </body>
+</html>
